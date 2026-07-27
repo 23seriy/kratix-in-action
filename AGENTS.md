@@ -2,7 +2,9 @@
 
 ## Project Overview
 
-Hands-on demo of **Kratix** — the open-source framework for building internal developer platforms on Kubernetes. Uses three NBA microservices to showcase Promises (self-service APIs), pipelines (resource transformation), and Destinations (multi-cluster scheduling) on a local Minikube cluster.
+Hands-on demo of **Kratix** — the open-source framework for building internal developer platforms on Kubernetes.
+Uses three NBA microservices to showcase Promises (self-service APIs), pipelines (resource transformation),
+and Destinations (multi-cluster scheduling) on a local Minikube cluster.
 
 ## Tech Stack
 
@@ -70,7 +72,7 @@ Scripts use `#!/usr/bin/env bash` and `set -euo pipefail`.
 - Commit messages follow `[type] description` convention
 - All shell scripts must pass `shellcheck`
 
-# Behavioral Guidelines
+## Behavioral Guidelines
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
@@ -122,6 +124,7 @@ Transform tasks into verifiable goals:
 - "Refactor X" → "Ensure tests pass before and after"
 
 For multi-step tasks, state a brief plan:
+
 ```
 1. [Step] → verify: [check]
 2. [Step] → verify: [check]

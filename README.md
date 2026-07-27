@@ -1,6 +1,8 @@
 # 🏗️ Kratix in Action
 
-A hands-on project demonstrating **[Kratix](https://kratix.io/)** — the open-source framework for building internal developer platforms on Kubernetes. Instead of teams filing tickets and waiting for ops to provision resources, Kratix lets you define **Promises** — self-service APIs that platform teams offer and dev teams consume with `kubectl apply`.
+A hands-on project demonstrating **[Kratix](https://kratix.io/)** — the open-source framework for building
+internal developer platforms on Kubernetes. Instead of teams filing tickets and waiting for ops to provision resources,
+Kratix lets you define **Promises** — self-service APIs that platform teams offer and dev teams consume with `kubectl apply`.
 
 The demo uses three NBA microservices to showcase how Kratix powers platform-as-a-product: dev teams request services, databases, and monitoring through Promises, while pipelines handle validation, security hardening, and scheduling — all running on your laptop.
 
@@ -55,7 +57,8 @@ The demo uses three NBA microservices to showcase how Kratix powers platform-as-
 
 **Kratix Controller** — The platform engine. Watches Promise definitions and Resource Requests. Runs pipelines to transform requests into scheduled resources.
 
-**Promises** — Self-service APIs defined by the platform team. Each Promise includes an API schema (what dev teams can request), pipelines (how requests are processed), and scheduling (where resources go).
+**Promises** — Self-service APIs defined by the platform team. Each Promise includes an API schema
+(what dev teams can request), pipelines (how requests are processed), and scheduling (where resources go).
 
 **Pipelines** — Containers that run when a resource is requested. They validate input, add security contexts, inject labels, generate manifests, and write output for scheduling.
 
@@ -242,7 +245,9 @@ kubectl apply -f kratix/requests/full-stack-request.yaml
 kubectl get nbaplatforms -n kratix-demo
 ```
 
-A single request provisions both the NBA service and its PostgreSQL database, with the service pre-configured to connect to the database. This is the power of platform abstraction — dev teams don't need to know how to wire services to databases.
+A single request provisions both the NBA service and its PostgreSQL database, with the service pre-configured
+to connect to the database. This is the power of platform abstraction — dev teams don't need to know how to wire
+services to databases.
 
 ### 8. Update a Running Resource Request
 
@@ -266,6 +271,7 @@ kubectl logs -n kratix-demo -l kratix.io/pipeline-name=configure --tail=20
 The pipeline container image doesn't exist. The pipeline pod is stuck in `ImagePullBackOff`. Learn to diagnose pipeline failures by checking pod status and logs.
 
 **Fix:**
+
 ```bash
 kubectl delete promise broken-pipeline
 kubectl delete nbaservice broken-service -n kratix-demo
@@ -282,6 +288,7 @@ kubectl describe nbaservice orphan-service -n kratix-demo
 The Promise schedules to a Destination called `production` that doesn't exist. Resources are generated but never delivered. Learn to compare destination names with `kubectl get destinations`.
 
 **Fix:**
+
 ```bash
 kubectl delete promise broken-no-destination
 kubectl delete nbaservice orphan-service -n kratix-demo
