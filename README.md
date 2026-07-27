@@ -4,7 +4,9 @@ A hands-on project demonstrating **[Kratix](https://kratix.io/)** — the open-s
 internal developer platforms on Kubernetes. Instead of teams filing tickets and waiting for ops to provision resources,
 Kratix lets you define **Promises** — self-service APIs that platform teams offer and dev teams consume with `kubectl apply`.
 
-The demo uses three NBA microservices to showcase how Kratix powers platform-as-a-product: dev teams request services, databases, and monitoring through Promises, while pipelines handle validation, security hardening, and scheduling — all running on your laptop.
+The demo uses three NBA microservices to showcase how Kratix powers platform-as-a-product: dev teams request services,
+databases, and monitoring through Promises, while pipelines handle validation, security hardening, and scheduling
+— all running on your laptop.
 
 ![Kratix](https://img.shields.io/badge/Kratix-0.17-7B2D8E?logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-1.32-326CE5?logo=kubernetes&logoColor=white)
