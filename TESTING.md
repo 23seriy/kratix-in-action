@@ -1,6 +1,7 @@
 # Testing Guide
 
-This document describes how to test kratix-in-action and validate changes before submitting a pull request.
+This document describes how to test kratix-in-action and validate changes
+before submitting a pull request.
 
 ## Automated Testing
 
@@ -29,7 +30,8 @@ hadolint apps/pipeline/Dockerfile
 
 ### GitHub Actions
 
-The repository includes automated validation via GitHub Actions (`.github/workflows/validate.yml`). Checks run on every push and pull request:
+The repository includes automated validation via GitHub Actions
+(`.github/workflows/validate.yml`). Checks run on every push and pull request:
 
 - **Shell linting** — `shellcheck` validates all scripts
 - **YAML validation** — `yamllint` checks Kubernetes manifests and Kratix resources

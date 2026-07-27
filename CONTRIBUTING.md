@@ -1,6 +1,9 @@
 # Contributing to kratix-in-action
 
-Thank you for your interest in contributing! This project aims to be a clear, educational demonstration of Kratix's platform engineering capabilities. Whether you're fixing a bug, improving documentation, or adding new scenarios, we appreciate your help.
+Thank you for your interest in contributing! This project aims to be a clear,
+educational demonstration of Kratix's platform engineering capabilities.
+Whether you're fixing a bug, improving documentation, or adding new scenarios,
+we appreciate your help.
 
 ## Getting Started
 
@@ -23,6 +26,7 @@ This project adheres to a Code of Conduct. Please review [CODE_OF_CONDUCT.md](CO
 ### Testing Your Changes
 
 For **script changes**:
+
 ```bash
 chmod +x scripts/*.sh
 ./scripts/02-start-cluster.sh
@@ -32,11 +36,13 @@ chmod +x scripts/*.sh
 ```
 
 For **Promise changes**:
+
 ```bash
 kubectl apply -f kratix/promises/<promise>.yaml --dry-run=client -o yaml
 ```
 
 For **Go code changes** (pipeline):
+
 ```bash
 cd apps/pipeline
 go vet ./...
@@ -44,12 +50,14 @@ go build -o /dev/null .
 ```
 
 For **manifest changes**:
+
 - Update the corresponding YAML in `k8s/` or `kratix/`
 - Run the full demo to ensure nothing breaks
 
 ### Shell Script Standards
 
 All shell scripts should:
+
 - Start with `#!/usr/bin/env bash` and `set -euo pipefail`
 - Use the project's `info()`, `warn()`, and `header()` helper functions for output
 - Include descriptive comments for complex logic
@@ -58,6 +66,7 @@ All shell scripts should:
 ### Kratix Resource Standards
 
 All resources in `kratix/` should:
+
 - Have clear metadata names that describe the resource's purpose
 - Use consistent labels (e.g., `demo: kratix-in-action`)
 - Include `app.kubernetes.io/managed-by: kratix` on generated resources
@@ -80,6 +89,7 @@ All resources in `kratix/` should:
 ### Bugs and Feature Requests
 
 Use GitHub Issues with:
+
 - **Clear title**: "Script fails on Minikube M1" is better than "Something broken"
 - **Steps to reproduce**: Exact commands and cluster state
 - **Expected vs. actual behavior**
@@ -99,6 +109,7 @@ Use GitHub Issues with:
 Use the format: `[type] short description`
 
 Types:
+
 - `[docs]` — Documentation-only changes
 - `[fix]` — Bug fixes
 - `[feature]` — New scenarios or Promises
@@ -109,7 +120,8 @@ Example: `[feature] add Redis caching Promise`
 
 ## Project Goals & Philosophy
 
-This project demonstrates Kratix through **hands-on examples**, not exhaustive feature coverage. When contributing:
+This project demonstrates Kratix through **hands-on examples**, not exhaustive
+feature coverage. When contributing:
 
 - **Prefer clarity over cleverness** — a simple Promise is more educational than a complex one
 - **Each scenario should teach one thing** — avoid mixing multiple concepts in a single scenario
@@ -119,6 +131,7 @@ This project demonstrates Kratix through **hands-on examples**, not exhaustive f
 ## Recognition
 
 Contributors will be recognized in:
+
 - The project README's acknowledgments section (if you'd like)
 - Individual commit history via GitHub
 

@@ -37,6 +37,7 @@ kubectl get events -n kratix-platform-system --sort-by=.metadata.creationTimesta
 ```
 
 **Fix:** Delete and reinstall:
+
 ```bash
 kubectl delete --filename https://github.com/syntasso/kratix/releases/latest/download/kratix.yaml
 ./scripts/02-start-cluster.sh
@@ -65,6 +66,7 @@ kubectl get crd | grep kratix
 ```
 
 Check Kratix controller logs:
+
 ```bash
 kubectl logs -n kratix-platform-system deploy/kratix-platform-controller-manager --tail=30
 ```
@@ -77,6 +79,7 @@ kubectl describe promise <name>
 ```
 
 Common causes:
+
 - Kratix controller not running
 - Invalid Promise YAML (check `spec.api` section)
 
@@ -94,6 +97,7 @@ kubectl describe pod -n kratix-demo -l kratix.io/promise-name=<promise-name>
 The pipeline container image doesn't exist or can't be pulled.
 
 **Fix:** Build the image and load it into Minikube:
+
 ```bash
 eval "$(minikube -p kratix-demo docker-env)"
 docker build -t kratix-demo/nba-pipeline:latest apps/pipeline
@@ -110,6 +114,7 @@ kubectl get deploy,svc -n kratix-demo -l app.kubernetes.io/managed-by=kratix
 ```
 
 Common causes:
+
 - Pipeline wrote to wrong output directory (must be `/kratix/output`)
 - Pipeline crashed silently (check exit code)
 - Input parsing failed (check `/kratix/input/object.yaml` format)
@@ -131,6 +136,7 @@ kubectl port-forward svc/minio 9000:9000 -n kratix-demo
 ```
 
 Common causes:
+
 - No Destination registered
 - Destination labels don't match Promise's destinationSelectors
 - MinIO credentials wrong in BucketStateStore Secret
@@ -145,7 +151,9 @@ Common causes:
 kubectl apply -f kratix/requests/<request>.yaml 2>&1
 ```
 
-Read the error message — it tells you which fields are invalid. Common issues:
+Read the error message — it tells you which fields are invalid.
+Common issues:
+
 - Missing required fields (e.g., `team`)
 - Value out of range (e.g., port < 1024)
 - Value not in enum (e.g., invalid environment)
@@ -183,6 +191,7 @@ docker build -t kratix-demo/scoreboard-api:latest apps/scoreboard-api
 ### "ImagePullBackOff" or "ErrImageNeverPull"
 
 Images use `imagePullPolicy: Never` (built locally):
+
 ```bash
 eval "$(minikube -p kratix-demo docker-env)"
 docker build -t kratix-demo/scoreboard-api:latest apps/scoreboard-api
@@ -208,6 +217,7 @@ minikube delete -p kratix-demo
 ### "Cluster is stuck in a weird state"
 
 Nuclear option:
+
 ```bash
 minikube delete -p kratix-demo --purge
 ```

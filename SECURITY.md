@@ -2,7 +2,9 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in kratix-in-action, please **do not** open a public GitHub issue. Instead, please report it responsibly by emailing [23seriy@gmail.com](mailto:23seriy@gmail.com) with:
+If you discover a security vulnerability in kratix-in-action, please
+**do not** open a public GitHub issue. Instead, report it responsibly
+by emailing [23seriy@gmail.com](mailto:23seriy@gmail.com) with:
 
 - A description of the vulnerability
 - Steps to reproduce it
@@ -12,6 +14,7 @@ If you discover a security vulnerability in kratix-in-action, please **do not** 
 **Please do not disclose the vulnerability publicly until we've had time to address it.**
 
 We will:
+
 1. Acknowledge receipt of your report within 48 hours
 2. Provide a timeline for a fix
 3. Work with you on the patch if needed
@@ -20,7 +23,8 @@ We will:
 
 ## Scope
 
-This security policy covers the kratix-in-action repository itself. It does **not** cover:
+This security policy covers the kratix-in-action repository itself.
+It does **not** cover:
 
 - **Kratix itself** — please report Kratix vulnerabilities to the [Kratix project](https://github.com/syntasso/kratix/security)
 - **Kubernetes** — please report Kubernetes vulnerabilities through their [security disclosure process](https://kubernetes.io/security/)
@@ -36,7 +40,8 @@ We consider the following as potential security issues:
 - **Container security** (running as root, missing security contexts)
 - **Supply chain risks** in the Go application or Docker build
 
-We do **not** consider the following as security issues (please file them as bugs instead):
+We do **not** consider the following as security issues
+(please file them as bugs instead):
 
 - Demo scenarios that intentionally break things (the point of this project)
 - Kratix controller vulnerabilities (report to Syntasso)
@@ -53,7 +58,8 @@ We do **not** consider the following as security issues (please file them as bug
 
 ### For Extending to Production
 
-If you're using this project as a blueprint for production platform engineering:
+If you're using this project as a blueprint for production
+platform engineering:
 
 - **Use proper secrets management** — not plaintext credentials in Secrets
 - **Implement RBAC** — restrict who can create Promises vs. who can make requests
@@ -67,6 +73,7 @@ If you're using this project as a blueprint for production platform engineering:
 ### MinIO Credentials in This Project
 
 The MinIO state store uses:
+
 - Username: `minioadmin` / Password: `minioadmin`
 - These are **MinIO default credentials** for the local demo
 - They are stored in a Kubernetes Secret
@@ -76,6 +83,7 @@ For production, use proper secrets management (Vault, AWS Secrets Manager, etc.)
 ### Container Security in This Project
 
 All containers in this project:
+
 - Run as a non-root user (UID 10001)
 - Use minimal base images (Alpine)
 - Have multi-stage Docker builds (pipeline container)
@@ -83,7 +91,10 @@ All containers in this project:
 
 ## Security Advisories
 
-We will publish security advisories for any reported vulnerabilities that we confirm. Check the [GitHub Security Advisories](https://github.com/23seriy/kratix-in-action/security/advisories) page.
+We will publish security advisories for any reported vulnerabilities
+that we confirm. Check the
+[GitHub Security Advisories](https://github.com/23seriy/kratix-in-action/security/advisories)
+page.
 
 ---
 

@@ -2,7 +2,9 @@
 
 ## Overview
 
-kratix-in-action is a community-driven educational project demonstrating Kratix's platform engineering capabilities. This document outlines how we make decisions, manage contributions, and maintain the project.
+kratix-in-action is a community-driven educational project demonstrating
+Kratix's platform engineering capabilities. This document outlines how we
+make decisions, manage contributions, and maintain the project.
 
 ## Project Goals
 
@@ -14,9 +16,11 @@ kratix-in-action is a community-driven educational project demonstrating Kratix'
 ## Maintainers
 
 The project is maintained by:
+
 - **Sergei Olshanetski** (@23seriy) — Creator and primary maintainer
 
 Maintainers handle:
+
 - Reviewing pull requests
 - Merging approved changes
 - Managing releases
@@ -26,6 +30,7 @@ Maintainers handle:
 ## Contributing
 
 We welcome contributions! See [CONTRIBUTING.md](../CONTRIBUTING.md) for:
+
 - How to get started
 - Development workflow
 - Testing requirements
@@ -34,17 +39,20 @@ We welcome contributions! See [CONTRIBUTING.md](../CONTRIBUTING.md) for:
 ## Decision Making
 
 ### Minor Changes (Docs, Bug Fixes, Tests)
+
 - Open a PR with a clear description
 - At least one maintainer approval needed
 - CI checks must pass
 
 ### Major Changes (New Features, Architecture)
+
 - Open an issue or discussion first
 - Get feedback from maintainers
 - Then open a PR
 - Allow 3-5 days for community feedback
 
 ### Breaking Changes
+
 - Only in major version bumps
 - Clearly documented in CHANGELOG
 - Community discussion encouraged
@@ -52,6 +60,7 @@ We welcome contributions! See [CONTRIBUTING.md](../CONTRIBUTING.md) for:
 ## Release Process
 
 We follow [Semantic Versioning](https://semver.org/):
+
 - **MAJOR** — Breaking changes
 - **MINOR** — New features (new Promises, scenarios)
 - **PATCH** — Bug fixes
@@ -59,6 +68,7 @@ We follow [Semantic Versioning](https://semver.org/):
 ## Code Standards
 
 All contributions must:
+
 - Pass `shellcheck` (shell scripts)
 - Pass `yamllint` (YAML files)
 - Build successfully with `go vet` and `go build` (Go code)

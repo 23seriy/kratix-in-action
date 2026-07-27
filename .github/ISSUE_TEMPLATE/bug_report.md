@@ -38,7 +38,7 @@ assignees: ''
 
 <!-- Paste any error messages or relevant log output -->
 
-```
+```text
 Paste logs here
 ```
 
