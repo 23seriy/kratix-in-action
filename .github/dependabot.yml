@@ -1,0 +1,51 @@
+version: 2
+updates:
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "[ci] "
+      prefix-development: "[ci] "
+
+  # Go modules (pipeline container)
+  - package-ecosystem: "gomod"
+    directory: "/apps/pipeline"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "[deps] "
+
+  # Docker (all Dockerfiles)
+  - package-ecosystem: "docker"
+    directory: "/apps/scoreboard-api"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "[deps] "
+
+  - package-ecosystem: "docker"
+    directory: "/apps/pipeline"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "[deps] "
+
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/apps/scoreboard-api"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: "[deps] "

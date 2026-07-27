@@ -1,0 +1,21 @@
+apiVersion: platform.kratix.io/v1alpha1
+kind: BucketStateStore
+metadata:
+  name: default
+spec:
+  endpoint: minio.kratix-demo.svc.cluster.local
+  insecure: true
+  bucketName: kratix
+  secretRef:
+    name: minio-credentials
+    namespace: kratix-demo
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-credentials
+  namespace: kratix-demo
+type: Opaque
+stringData:
+  accessKeyID: minioadmin
+  secretAccessKey: minioadmin

@@ -1,0 +1,11 @@
+apiVersion: demo.kratix.io/v1alpha1
+kind: PostgreSQL
+metadata:
+  name: scoreboard-db
+  namespace: kratix-demo
+spec:
+  name: scoreboard-db
+  team: team-courtside
+  environment: dev
+  size: small
+  namespace: kratix-demo

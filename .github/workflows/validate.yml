@@ -1,0 +1,88 @@
+name: Validate
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  shell-lint:
+    name: Shell Script Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shellcheck
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: scripts/
+          additional_files: ""
+
+  yaml-lint:
+    name: YAML Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install yamllint
+        run: pip install yamllint
+      - name: Lint YAML files
+        run: |
+          yamllint -d relaxed k8s/*.yaml
+          yamllint -d relaxed kratix/*.yaml
+          yamllint -d relaxed kratix/promises/*.yaml
+          yamllint -d relaxed kratix/requests/*.yaml
+          yamllint -d relaxed kratix/broken/*.yaml
+
+  go-build:
+    name: Go Build & Vet
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+      - name: Vet
+        working-directory: apps/pipeline
+        run: go vet ./...
+      - name: Build
+        working-directory: apps/pipeline
+        run: go build -o /dev/null .
+
+  dockerfile-lint:
+    name: Dockerfile Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint Dockerfiles
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: apps/scoreboard-api/Dockerfile
+      - name: Lint pipeline Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: apps/pipeline/Dockerfile
+
+  markdown-lint:
+    name: Markdown Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint markdown
+        uses: DavidAnson/markdownlint-cli2-action@v16
+        with:
+          globs: "**/*.md"
+
+  docs-check:
+    name: Documentation Completeness
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check required files exist
+        run: |
+          for file in README.md CONTRIBUTING.md TESTING.md TROUBLESHOOTING.md SECURITY.md CODE_OF_CONDUCT.md CHANGELOG.md CLAUDE.md AGENTS.md; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing: $file"
+              exit 1
+            fi
+            echo "✅ Found: $file"
+          done

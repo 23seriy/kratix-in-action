@@ -1,0 +1,130 @@
+apiVersion: platform.kratix.io/v1alpha1
+kind: Promise
+metadata:
+  name: nba-service
+  labels:
+    demo: kratix-in-action
+    version: v2
+  annotations:
+    description: "NBA Service Promise v2 — enhanced with security hardening pipeline"
+spec:
+  api:
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: nbaservices.demo.kratix.io
+    spec:
+      group: demo.kratix.io
+      names:
+        kind: NBAService
+        plural: nbaservices
+        singular: nbaservice
+      scope: Namespaced
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
+          schema:
+            openAPIV3Schema:
+              type: object
+              properties:
+                spec:
+                  type: object
+                  required:
+                    - name
+                    - team
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the NBA microservice
+                      minLength: 3
+                      maxLength: 63
+                    port:
+                      type: integer
+                      description: Container port
+                      default: 8080
+                      minimum: 1024
+                      maximum: 65535
+                    team:
+                      type: string
+                      description: Owning team
+                    environment:
+                      type: string
+                      description: Target environment
+                      default: dev
+                      enum:
+                        - dev
+                        - staging
+                        - production
+                    image:
+                      type: string
+                      description: Container image (defaults to kratix-demo/<name>:latest)
+                    replicas:
+                      type: integer
+                      description: Number of replicas
+                      default: 1
+                      minimum: 1
+                      maximum: 5
+                    namespace:
+                      type: string
+                      description: Target namespace
+                      default: kratix-demo
+          additionalPrinterColumns:
+            - name: Team
+              type: string
+              jsonPath: .spec.team
+            - name: Environment
+              type: string
+              jsonPath: .spec.environment
+            - name: Port
+              type: integer
+              jsonPath: .spec.port
+  workflows:
+    resource:
+      configure:
+        - apiVersion: platform.kratix.io/v1alpha1
+          kind: Pipeline
+          metadata:
+            name: configure
+            namespace: kratix-demo
+          spec:
+            containers:
+              - name: generate-resources
+                image: kratix-demo/nba-pipeline:latest
+                imagePullPolicy: Never
+              - name: security-hardening
+                image: kratix-demo/nba-pipeline:latest
+                imagePullPolicy: Never
+                command: ["sh", "-c"]
+                args:
+                  - |
+                    echo "🔒 Security hardening pipeline step"
+                    echo "Adding NetworkPolicy for generated service..."
+                    # Read the service name from the input
+                    SERVICE_NAME=$(cat /kratix/input/object.yaml | grep -A1 'name:' | head -1 | awk '{print $2}')
+                    NAMESPACE=$(cat /kratix/input/object.yaml | grep 'namespace:' | head -1 | awk '{print $2}')
+                    NAMESPACE=${NAMESPACE:-kratix-demo}
+
+                    cat > /kratix/output/${SERVICE_NAME}-networkpolicy.yaml <<EOF
+                    apiVersion: networking.k8s.io/v1
+                    kind: NetworkPolicy
+                    metadata:
+                      name: ${SERVICE_NAME}-policy
+                      namespace: ${NAMESPACE}
+                      labels:
+                        app: ${SERVICE_NAME}
+                        app.kubernetes.io/managed-by: kratix
+                    spec:
+                      podSelector:
+                        matchLabels:
+                          app: ${SERVICE_NAME}
+                      policyTypes:
+                        - Ingress
+                      ingress:
+                        - from:
+                            - podSelector: {}
+                          ports:
+                            - port: 8080
+                              protocol: TCP
+                    EOF
+                    echo "✅ NetworkPolicy generated"

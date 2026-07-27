@@ -1,0 +1,17 @@
+# 🔥 BROKEN — This request violates the Promise schema:
+#   - name is too short (min 3 characters)
+#   - port is out of range (must be 1024-65535)
+#   - environment is not in the allowed enum
+#   - team is missing (required field)
+#
+# Kubernetes API validation will reject this request.
+# Read the error message to understand which fields need fixing.
+apiVersion: demo.kratix.io/v1alpha1
+kind: NBAService
+metadata:
+  name: bad-request
+  namespace: kratix-demo
+spec:
+  name: ab
+  port: 80
+  environment: invalid-env

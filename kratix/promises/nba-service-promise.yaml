@@ -1,0 +1,91 @@
+apiVersion: platform.kratix.io/v1alpha1
+kind: Promise
+metadata:
+  name: nba-service
+  labels:
+    demo: kratix-in-action
+spec:
+  api:
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: nbaservices.demo.kratix.io
+    spec:
+      group: demo.kratix.io
+      names:
+        kind: NBAService
+        plural: nbaservices
+        singular: nbaservice
+      scope: Namespaced
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
+          schema:
+            openAPIV3Schema:
+              type: object
+              properties:
+                spec:
+                  type: object
+                  required:
+                    - name
+                    - team
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the NBA microservice
+                      minLength: 3
+                      maxLength: 63
+                    port:
+                      type: integer
+                      description: Container port
+                      default: 8080
+                      minimum: 1024
+                      maximum: 65535
+                    team:
+                      type: string
+                      description: Owning team
+                    environment:
+                      type: string
+                      description: Target environment
+                      default: dev
+                      enum:
+                        - dev
+                        - staging
+                        - production
+                    image:
+                      type: string
+                      description: Container image (defaults to kratix-demo/<name>:latest)
+                    replicas:
+                      type: integer
+                      description: Number of replicas
+                      default: 1
+                      minimum: 1
+                      maximum: 5
+                    namespace:
+                      type: string
+                      description: Target namespace
+                      default: kratix-demo
+          additionalPrinterColumns:
+            - name: Team
+              type: string
+              jsonPath: .spec.team
+            - name: Environment
+              type: string
+              jsonPath: .spec.environment
+            - name: Port
+              type: integer
+              jsonPath: .spec.port
+  workflows:
+    resource:
+      configure:
+        - apiVersion: platform.kratix.io/v1alpha1
+          kind: Pipeline
+          metadata:
+            name: configure
+            namespace: kratix-demo
+          spec:
+            containers:
+              - name: generate-resources
+                image: kratix-demo/nba-pipeline:latest
+                imagePullPolicy: Never

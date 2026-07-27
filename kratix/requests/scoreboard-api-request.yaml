@@ -1,0 +1,13 @@
+apiVersion: demo.kratix.io/v1alpha1
+kind: NBAService
+metadata:
+  name: scoreboard-api
+  namespace: kratix-demo
+spec:
+  name: scoreboard-api
+  port: 8080
+  team: team-courtside
+  environment: dev
+  image: kratix-demo/scoreboard-api:latest
+  replicas: 1
+  namespace: kratix-demo

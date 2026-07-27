@@ -1,0 +1,143 @@
+apiVersion: platform.kratix.io/v1alpha1
+kind: Promise
+metadata:
+  name: nba-platform
+  labels:
+    demo: kratix-in-action
+  annotations:
+    description: "Compound Promise — provisions an NBA service AND its PostgreSQL database"
+spec:
+  api:
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: nbaplatforms.demo.kratix.io
+    spec:
+      group: demo.kratix.io
+      names:
+        kind: NBAPlatform
+        plural: nbaplatforms
+        singular: nbaplatform
+      scope: Namespaced
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
+          schema:
+            openAPIV3Schema:
+              type: object
+              properties:
+                spec:
+                  type: object
+                  required:
+                    - name
+                    - team
+                  properties:
+                    name:
+                      type: string
+                      description: Service name (database will be <name>-db)
+                      minLength: 3
+                      maxLength: 63
+                    team:
+                      type: string
+                      description: Owning team
+                    environment:
+                      type: string
+                      default: dev
+                      enum:
+                        - dev
+                        - staging
+                        - production
+                    port:
+                      type: integer
+                      default: 8080
+                      minimum: 1024
+                      maximum: 65535
+                    dbSize:
+                      type: string
+                      default: small
+                      enum:
+                        - small
+                        - medium
+                        - large
+                    namespace:
+                      type: string
+                      default: kratix-demo
+          additionalPrinterColumns:
+            - name: Team
+              type: string
+              jsonPath: .spec.team
+            - name: Environment
+              type: string
+              jsonPath: .spec.environment
+            - name: DB Size
+              type: string
+              jsonPath: .spec.dbSize
+  requires:
+    - type: Promise
+      name: nba-service
+    - type: Promise
+      name: postgresql
+  workflows:
+    resource:
+      configure:
+        - apiVersion: platform.kratix.io/v1alpha1
+          kind: Pipeline
+          metadata:
+            name: configure-platform
+            namespace: kratix-demo
+          spec:
+            containers:
+              - name: generate-compound
+                image: alpine:3.20
+                command: ["sh", "-c"]
+                args:
+                  - |
+                    echo "📦 Compound Pipeline — generating service + database"
+
+                    INPUT="/kratix/input/object.yaml"
+                    OUTPUT="/kratix/output"
+
+                    NAME=$(grep -A1 '^  name:' "$INPUT" | head -1 | awk '{print $2}')
+                    NAMESPACE=$(grep 'namespace:' "$INPUT" | head -1 | awk '{print $2}')
+                    NAMESPACE=${NAMESPACE:-kratix-demo}
+                    TEAM=$(grep 'team:' "$INPUT" | head -1 | awk '{print $2}')
+                    TEAM=${TEAM:-platform}
+                    ENVIRONMENT=$(grep 'environment:' "$INPUT" | head -1 | awk '{print $2}')
+                    ENVIRONMENT=${ENVIRONMENT:-dev}
+                    PORT=$(grep 'port:' "$INPUT" | head -1 | awk '{print $2}')
+                    PORT=${PORT:-8080}
+                    DB_SIZE=$(grep 'dbSize:' "$INPUT" | head -1 | awk '{print $2}')
+                    DB_SIZE=${DB_SIZE:-small}
+
+                    # Generate NBAService resource request
+                    cat > "$OUTPUT/${NAME}-service-request.yaml" <<EOF
+                    apiVersion: demo.kratix.io/v1alpha1
+                    kind: NBAService
+                    metadata:
+                      name: ${NAME}
+                      namespace: ${NAMESPACE}
+                    spec:
+                      name: ${NAME}
+                      team: ${TEAM}
+                      environment: ${ENVIRONMENT}
+                      port: ${PORT}
+                      namespace: ${NAMESPACE}
+                    EOF
+
+                    # Generate PostgreSQL resource request
+                    cat > "$OUTPUT/${NAME}-db-request.yaml" <<EOF
+                    apiVersion: demo.kratix.io/v1alpha1
+                    kind: PostgreSQL
+                    metadata:
+                      name: ${NAME}-db
+                      namespace: ${NAMESPACE}
+                    spec:
+                      name: ${NAME}-db
+                      team: ${TEAM}
+                      environment: ${ENVIRONMENT}
+                      size: ${DB_SIZE}
+                      namespace: ${NAMESPACE}
+                    EOF
+
+                    echo "✅ Compound pipeline complete — service + database requests generated"

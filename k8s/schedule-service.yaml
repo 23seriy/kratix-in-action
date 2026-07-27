@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: schedule-service
+  namespace: kratix-demo
+  labels:
+    app: schedule-service
+    app.kubernetes.io/name: schedule-service
+    app.kubernetes.io/part-of: nba-platform
+    app.kubernetes.io/managed-by: manual
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: schedule-service
+  template:
+    metadata:
+      labels:
+        app: schedule-service
+        app.kubernetes.io/name: schedule-service
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+      containers:
+        - name: schedule-service
+          image: kratix-demo/schedule-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: APP_VERSION
+              value: "1.0.0"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: schedule-service
+  namespace: kratix-demo
+  labels:
+    app: schedule-service
+    app.kubernetes.io/name: schedule-service
+    app.kubernetes.io/managed-by: manual
+spec:
+  selector:
+    app: schedule-service
+  ports:
+    - port: 8080
+      targetPort: 8080
+  type: ClusterIP

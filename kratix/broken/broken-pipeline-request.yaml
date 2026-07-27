@@ -1,0 +1,7 @@
+apiVersion: demo.kratix.io/v1alpha1
+kind: BrokenPipeline
+metadata:
+  name: broken-service
+  namespace: kratix-demo
+spec:
+  name: broken-service

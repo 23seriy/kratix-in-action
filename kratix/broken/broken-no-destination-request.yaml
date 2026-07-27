@@ -1,0 +1,7 @@
+apiVersion: demo.kratix.io/v1alpha1
+kind: OrphanService
+metadata:
+  name: orphan-service
+  namespace: kratix-demo
+spec:
+  name: orphan-service

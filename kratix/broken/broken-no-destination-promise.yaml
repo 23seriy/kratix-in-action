@@ -1,0 +1,51 @@
+apiVersion: platform.kratix.io/v1alpha1
+kind: Promise
+metadata:
+  name: broken-no-destination
+  labels:
+    demo: kratix-in-action
+    scenario: troubleshooting
+  annotations:
+    description: "🔥 BROKEN — Schedules to a Destination that does not exist"
+spec:
+  destinationSelectors:
+    - matchLabels:
+        environment: production
+  api:
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: orphanservices.demo.kratix.io
+    spec:
+      group: demo.kratix.io
+      names:
+        kind: OrphanService
+        plural: orphanservices
+        singular: orphanservice
+      scope: Namespaced
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
+          schema:
+            openAPIV3Schema:
+              type: object
+              properties:
+                spec:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+  workflows:
+    resource:
+      configure:
+        - apiVersion: platform.kratix.io/v1alpha1
+          kind: Pipeline
+          metadata:
+            name: configure
+            namespace: kratix-demo
+          spec:
+            containers:
+              - name: generate-resources
+                image: kratix-demo/nba-pipeline:latest
+                imagePullPolicy: Never

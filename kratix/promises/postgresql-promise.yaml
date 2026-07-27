@@ -1,0 +1,203 @@
+apiVersion: platform.kratix.io/v1alpha1
+kind: Promise
+metadata:
+  name: postgresql
+  labels:
+    demo: kratix-in-action
+spec:
+  api:
+    apiVersion: apiextensions.k8s.io/v1
+    kind: CustomResourceDefinition
+    metadata:
+      name: postgresqls.demo.kratix.io
+    spec:
+      group: demo.kratix.io
+      names:
+        kind: PostgreSQL
+        plural: postgresqls
+        singular: postgresql
+      scope: Namespaced
+      versions:
+        - name: v1alpha1
+          served: true
+          storage: true
+          schema:
+            openAPIV3Schema:
+              type: object
+              properties:
+                spec:
+                  type: object
+                  required:
+                    - name
+                    - team
+                  properties:
+                    name:
+                      type: string
+                      description: Database instance name
+                      minLength: 3
+                      maxLength: 63
+                    team:
+                      type: string
+                      description: Owning team
+                    environment:
+                      type: string
+                      description: Target environment
+                      default: dev
+                      enum:
+                        - dev
+                        - staging
+                        - production
+                    size:
+                      type: string
+                      description: Database size (small=256Mi, medium=512Mi, large=1Gi)
+                      default: small
+                      enum:
+                        - small
+                        - medium
+                        - large
+                    namespace:
+                      type: string
+                      description: Target namespace
+                      default: kratix-demo
+          additionalPrinterColumns:
+            - name: Team
+              type: string
+              jsonPath: .spec.team
+            - name: Size
+              type: string
+              jsonPath: .spec.size
+            - name: Environment
+              type: string
+              jsonPath: .spec.environment
+  workflows:
+    resource:
+      configure:
+        - apiVersion: platform.kratix.io/v1alpha1
+          kind: Pipeline
+          metadata:
+            name: configure-postgresql
+            namespace: kratix-demo
+          spec:
+            containers:
+              - name: generate-postgresql
+                image: alpine:3.20
+                command: ["sh", "-c"]
+                args:
+                  - |
+                    echo "🗄️ PostgreSQL Pipeline — starting"
+                    apk add --no-cache yq > /dev/null 2>&1 || true
+
+                    INPUT="/kratix/input/object.yaml"
+                    OUTPUT="/kratix/output"
+
+                    NAME=$(grep -A1 '^  name:' "$INPUT" | head -1 | awk '{print $2}')
+                    NAMESPACE=$(grep 'namespace:' "$INPUT" | head -1 | awk '{print $2}')
+                    NAMESPACE=${NAMESPACE:-kratix-demo}
+                    TEAM=$(grep 'team:' "$INPUT" | head -1 | awk '{print $2}')
+                    TEAM=${TEAM:-platform}
+                    ENVIRONMENT=$(grep 'environment:' "$INPUT" | head -1 | awk '{print $2}')
+                    ENVIRONMENT=${ENVIRONMENT:-dev}
+                    SIZE=$(grep 'size:' "$INPUT" | head -1 | awk '{print $2}')
+                    SIZE=${SIZE:-small}
+
+                    case "$SIZE" in
+                      small)  MEMORY="256Mi"; CPU="100m" ;;
+                      medium) MEMORY="512Mi"; CPU="250m" ;;
+                      large)  MEMORY="1Gi";   CPU="500m" ;;
+                      *)      MEMORY="256Mi"; CPU="100m" ;;
+                    esac
+
+                    echo "Generating PostgreSQL: name=$NAME size=$SIZE ($MEMORY)"
+
+                    # Secret
+                    cat > "$OUTPUT/${NAME}-secret.yaml" <<EOF
+                    apiVersion: v1
+                    kind: Secret
+                    metadata:
+                      name: ${NAME}-credentials
+                      namespace: ${NAMESPACE}
+                      labels:
+                        app: ${NAME}
+                        app.kubernetes.io/managed-by: kratix
+                        team: ${TEAM}
+                    type: Opaque
+                    stringData:
+                      POSTGRES_USER: nba_user
+                      POSTGRES_PASSWORD: nba_pass_$(echo $NAME | md5sum | head -c 8)
+                      POSTGRES_DB: ${NAME}
+                      DATABASE_URL: "postgresql://nba_user:nba_pass_$(echo $NAME | md5sum | head -c 8)@${NAME}:5432/${NAME}"
+                    EOF
+
+                    # StatefulSet
+                    cat > "$OUTPUT/${NAME}-statefulset.yaml" <<EOF
+                    apiVersion: apps/v1
+                    kind: StatefulSet
+                    metadata:
+                      name: ${NAME}
+                      namespace: ${NAMESPACE}
+                      labels:
+                        app: ${NAME}
+                        app.kubernetes.io/managed-by: kratix
+                        team: ${TEAM}
+                        environment: ${ENVIRONMENT}
+                    spec:
+                      serviceName: ${NAME}
+                      replicas: 1
+                      selector:
+                        matchLabels:
+                          app: ${NAME}
+                      template:
+                        metadata:
+                          labels:
+                            app: ${NAME}
+                            team: ${TEAM}
+                        spec:
+                          containers:
+                            - name: postgresql
+                              image: postgres:16-alpine
+                              ports:
+                                - containerPort: 5432
+                              envFrom:
+                                - secretRef:
+                                    name: ${NAME}-credentials
+                              resources:
+                                requests:
+                                  cpu: ${CPU}
+                                  memory: ${MEMORY}
+                                limits:
+                                  cpu: ${CPU}
+                                  memory: ${MEMORY}
+                              volumeMounts:
+                                - name: data
+                                  mountPath: /var/lib/postgresql/data
+                      volumeClaimTemplates:
+                        - metadata:
+                            name: data
+                          spec:
+                            accessModes: ["ReadWriteOnce"]
+                            resources:
+                              requests:
+                                storage: 1Gi
+                    EOF
+
+                    # Service
+                    cat > "$OUTPUT/${NAME}-service.yaml" <<EOF
+                    apiVersion: v1
+                    kind: Service
+                    metadata:
+                      name: ${NAME}
+                      namespace: ${NAMESPACE}
+                      labels:
+                        app: ${NAME}
+                        app.kubernetes.io/managed-by: kratix
+                        team: ${TEAM}
+                    spec:
+                      selector:
+                        app: ${NAME}
+                      ports:
+                        - port: 5432
+                          targetPort: 5432
+                      type: ClusterIP
+                    EOF
+
+                    echo "✅ PostgreSQL pipeline complete"
