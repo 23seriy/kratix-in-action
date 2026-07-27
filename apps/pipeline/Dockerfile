@@ -6,7 +6,7 @@ COPY main.go .
 
 RUN go build -o /pipeline .
 
-FROM alpine:3.20
+FROM alpine:3.24
 
 RUN adduser -D -u 10001 appuser
 
