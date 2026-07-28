@@ -248,7 +248,7 @@ The request violates the schema — missing required fields, port out of range. 
 This comes up a lot. Here's my take:
 
 | Tool | What It Does | When to Use It |
-|------|-------------|----------------|
+| ------ | ------------- | ---------------- |
 | **Crossplane** | Provisions cloud resources via Kubernetes CRDs | You need to manage AWS/GCP/Azure resources declaratively |
 | **Backstage** | Developer portal with service catalog and templates | You need a UI for discoverability and documentation |
 | **Kratix** | Self-service platform APIs with pipeline-based fulfillment | You need to encode platform standards into automated workflows |

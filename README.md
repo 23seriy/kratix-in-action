@@ -71,7 +71,7 @@ databases, and monitoring through Promises, while pipelines handle validation, s
 ## 📋 What You'll Learn
 
 | Kratix Concept | What It Does | Demo Scenario |
-|---|---|---|
+| --- | --- | --- |
 | **Promises** | Define self-service platform capabilities as CRDs | Create an "NBA Service" Promise that generates Deployments + Services |
 | **Resource Requests** | Dev teams claim resources from Promises | Request a scoreboard-api with `kubectl apply` |
 | **Pipelines** | Transform and validate resource requests | Add security contexts, labels, and resource limits automatically |

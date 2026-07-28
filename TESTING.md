@@ -117,7 +117,7 @@ kubectl logs -n kratix-platform-system deploy/kratix-platform-controller-manager
 ### Core Functionality
 
 | Test | Command | Expected Result |
-|------|---------|-----------------|
+| ------ | --------- | ----------------- |
 | Install tools | `./scripts/01-install-prerequisites.sh` | All tools installed, versions printed |
 | Start cluster | `./scripts/02-start-cluster.sh` | Minikube running, Kratix deployed, MinIO ready |
 | Deploy app | `./scripts/03-deploy-app.sh` | All NBA services running |
@@ -127,7 +127,7 @@ kubectl logs -n kratix-platform-system deploy/kratix-platform-controller-manager
 ### Kratix Resources
 
 | Resource | Manifest | Expected |
-|----------|----------|----------|
+| ---------- | ---------- | ---------- |
 | Promise | `nba-service-promise.yaml` | Promise installed, CRD created |
 | Request | `scoreboard-api-request.yaml` | Pipeline runs, resources generated |
 | PostgreSQL | `postgresql-promise.yaml` | Promise installed, StatefulSet on request |
@@ -136,7 +136,7 @@ kubectl logs -n kratix-platform-system deploy/kratix-platform-controller-manager
 ### Troubleshooting Scenarios
 
 | Scenario | Manifest | Expected Failure | Lesson |
-|----------|----------|------------------|--------|
+| ---------- | ---------- | ------------------ | -------- |
 | Bad Pipeline | `broken-pipeline-promise.yaml` | Pod stuck in ImagePullBackOff | Verify pipeline images |
 | Missing Destination | `broken-no-destination-promise.yaml` | Resources not scheduled | Match destination labels |
 | Invalid Request | `broken-invalid-request.yaml` | API validation rejects | Fix schema violations |
