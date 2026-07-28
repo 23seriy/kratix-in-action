@@ -4,7 +4,9 @@
 
 ---
 
-Last quarter, a developer on my team needed a new microservice. They opened a Jira ticket. It sat in a queue for two days. An ops engineer provisioned a Deployment, a Service, a ConfigMap, a Secret, set up resource limits, added security contexts, wired DNS, and tagged everything with the right labels.
+Last quarter, a developer on my team needed a new microservice. They opened a Jira ticket.
+It sat in a queue for two days. An ops engineer provisioned a Deployment, a Service, a ConfigMap, a Secret,
+set up resource limits, added security contexts, wired DNS, and tagged everything with the right labels.
 
 Total time: 3 days. Total human effort: 4 hours across two people.
 
@@ -28,7 +30,8 @@ That's exactly what Kratix does.
 
 ## What Is Kratix (and Why Should You Care)?
 
-[Kratix](https://kratix.io/) is an open-source framework by [Syntasso](https://www.syntasso.io/) for building internal developer platforms on Kubernetes. But calling it "a framework" undersells it. Here's the pitch:
+[Kratix](https://kratix.io/) is an open-source framework by [Syntasso](https://www.syntasso.io/) for building
+internal developer platforms on Kubernetes. But calling it "a framework" undersells it. Here's the pitch:
 
 > **Kratix lets platform teams define self-service APIs called Promises. Developers consume them with `kubectl apply`. The platform handles everything else.**
 
@@ -43,7 +46,9 @@ No tickets. No queues. No back-and-forth on Slack.
 
 ## I Built a Full Demo to Prove It Works
 
-I created **[kratix-in-action](https://github.com/23seriy/kratix-in-action)** — a hands-on project that demonstrates every major Kratix concept using NBA microservices. Why NBA? Because if I'm going to stare at terminal output for hours, I want it to show basketball scores, not "hello world."
+I created **[kratix-in-action](https://github.com/23seriy/kratix-in-action)** — a hands-on project that demonstrates
+every major Kratix concept using NBA microservices. Why NBA? Because if I'm going to stare at terminal output
+for hours, I want it to show basketball scores, not "hello world."
 
 The project includes:
 
@@ -83,7 +88,9 @@ Everything runs on your laptop with Minikube. No cloud account needed.
 └──────────────────────────────────────────────────┘
 ```
 
-The key insight: **Kratix separates *what* from *how*.** Dev teams say *what* they need (a service, a database). The platform defines *how* it's delivered (with security contexts, resource limits, labels, monitoring — baked into pipelines).
+The key insight: **Kratix separates *what* from *how*.** Dev teams say *what* they need (a service, a database).
+The platform defines *how* it's delivered (with security contexts, resource limits, labels, monitoring
+— baked into pipelines).
 
 ---
 
@@ -197,7 +204,8 @@ kubectl apply -f kratix/promises/nba-platform-promise.yaml
 kubectl apply -f kratix/requests/full-stack-request.yaml
 ```
 
-One request. The platform provisions the service, provisions PostgreSQL, generates the connection credentials, and wires them together. The developer gets a fully connected stack without knowing how any of it works.
+One request. The platform provisions the service, provisions PostgreSQL, generates the connection credentials,
+and wires them together. The developer gets a fully connected stack without knowing how any of it works.
 
 **This is the promise (pun intended) of platform engineering: composable, self-service infrastructure.**
 
@@ -246,7 +254,9 @@ This comes up a lot. Here's my take:
 | **Kratix** | Self-service platform APIs with pipeline-based fulfillment | You need to encode platform standards into automated workflows |
 | **Custom scripts** | Whatever you duct-tape together | Please don't |
 
-They're not competitors — they're complementary. Kratix handles the *fulfillment layer*: what happens when someone requests a resource. It can trigger Crossplane compositions, Helm releases, Terraform runs, or plain Kubernetes manifests. Backstage can serve as the frontend.
+They're not competitors — they're complementary. Kratix handles the *fulfillment layer*: what happens when someone
+requests a resource. It can trigger Crossplane compositions, Helm releases, Terraform runs, or plain Kubernetes
+manifests. Backstage can serve as the frontend.
 
 But if I had to pick one tool to start building a platform? **Kratix.** Because it solves the hardest problem: turning organizational standards into automated, self-service workflows.
 
@@ -283,7 +293,8 @@ cd kratix-in-action
 
 **20 minutes. 10 scenarios. Zero cloud costs.**
 
-The repo includes detailed documentation, troubleshooting guides, and CI/CD workflows. Star it if you find it useful: **[github.com/23seriy/kratix-in-action](https://github.com/23seriy/kratix-in-action)**
+The repo includes detailed documentation, troubleshooting guides, and CI/CD workflows.
+Star it if you find it useful: **[github.com/23seriy/kratix-in-action](https://github.com/23seriy/kratix-in-action)**
 
 ---
 
@@ -296,7 +307,8 @@ I'm planning to extend this project with:
 - **Monitoring Promise** — auto-inject Prometheus ServiceMonitor and Grafana dashboards
 - **RBAC and multi-tenancy** — different teams, different Promises, different permissions
 
-If you're building an internal developer platform (or thinking about it), Kratix is worth your time. It's the closest thing I've seen to a framework that actually makes platform-as-a-product practical.
+If you're building an internal developer platform (or thinking about it), Kratix is worth your time.
+It's the closest thing I've seen to a framework that actually makes platform-as-a-product practical.
 
 ---
 
