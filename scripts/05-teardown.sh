@@ -20,7 +20,7 @@ header "🗑️ Kratix in Action — Teardown"
 echo -e "${RED}This will delete the Minikube cluster '$PROFILE' and all resources.${NC}"
 read -rp "Are you sure? (y/N): " confirm
 
-if [[ "${confirm,,}" != "y" ]]; then
+if [[ "$confirm" != "y" && "$confirm" != "Y" ]]; then
     info "Teardown cancelled."
     exit 0
 fi
