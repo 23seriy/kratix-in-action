@@ -112,7 +112,19 @@ kubectl run minio-setup --rm -i --restart=Never -n "$NAMESPACE" \
 
 info "✅ MinIO deployed and bucket created"
 
-# ─── Step 4: Install Kratix ───
+# ─── Step 4: Install cert-manager (Kratix prerequisite) ───
+info "Installing cert-manager..."
+
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/latest/download/cert-manager.yaml
+
+info "Waiting for cert-manager to be ready..."
+kubectl wait --for=condition=available deployment/cert-manager -n cert-manager --timeout=120s
+kubectl wait --for=condition=available deployment/cert-manager-webhook -n cert-manager --timeout=120s
+kubectl wait --for=condition=available deployment/cert-manager-cainjector -n cert-manager --timeout=120s
+
+info "✅ cert-manager installed"
+
+# ─── Step 5: Install Kratix ───
 info "Installing Kratix..."
 
 kubectl apply --filename https://github.com/syntasso/kratix/releases/latest/download/kratix.yaml
@@ -123,7 +135,7 @@ kubectl wait --for=condition=available deployment/kratix-platform-controller-man
 
 info "✅ Kratix installed"
 
-# ─── Step 5: Configure State Store + Destination ───
+# ─── Step 6: Configure State Store + Destination ───
 info "Configuring BucketStateStore..."
 kubectl apply -f "$SCRIPT_DIR/kratix/statestore.yaml"
 
