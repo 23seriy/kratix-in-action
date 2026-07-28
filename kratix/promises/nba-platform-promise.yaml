@@ -73,11 +73,6 @@ spec:
             - name: DB Size
               type: string
               jsonPath: .spec.dbSize
-  requires:
-    - type: Promise
-      name: nba-service
-    - type: Promise
-      name: postgresql
   workflows:
     resource:
       configure:
