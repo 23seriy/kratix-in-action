@@ -1,0 +1,18 @@
+{
+  "config": {
+    "default": true,
+    "MD013": {
+      "line_length": 200,
+      "code_blocks": false,
+      "tables": false,
+      "headings": false
+    },
+    "MD022": false,
+    "MD024": false,
+    "MD032": false,
+    "MD033": false,
+    "MD040": false,
+    "MD068": false,
+    "no-hard-tabs": false
+  }
+}

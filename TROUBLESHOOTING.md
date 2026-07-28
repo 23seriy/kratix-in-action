@@ -229,7 +229,7 @@ Then start fresh: `./scripts/02-start-cluster.sh`
 ## Quick Reference
 
 | Issue | Command |
-|-------|---------|
+| ------- | --------- |
 | Kratix logs | `kubectl logs -n kratix-platform-system deploy/kratix-platform-controller-manager --tail=50` |
 | All Promises | `kubectl get promises` |
 | All Destinations | `kubectl get destinations` |
