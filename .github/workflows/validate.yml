@@ -54,11 +54,11 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Lint Dockerfiles
-        uses: hadolint/hadolint-action@v3.3.0
+        uses: hadolint/hadolint-action@v3.4.0
         with:
           dockerfile: apps/scoreboard-api/Dockerfile
       - name: Lint pipeline Dockerfile
-        uses: hadolint/hadolint-action@v3.3.0
+        uses: hadolint/hadolint-action@v3.4.0
         with:
           dockerfile: apps/pipeline/Dockerfile
 
